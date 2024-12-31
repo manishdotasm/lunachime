@@ -10,7 +10,7 @@ export interface IPost extends Document {
   media: {
     url: string;
     type: string;
-  };
+  }[];
   likes: string[];
   comments: {
     author: string; // User ID (reference)

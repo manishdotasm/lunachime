@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Heart, MessageSquare, BookmarkCheck } from "lucide-react";
 import { IPost } from "@/models/post-schema";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"; // Import the carousel components
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 interface PostDialogProps {
   post: IPost;
@@ -14,6 +16,9 @@ export function PostDialog({ post, children }: PostDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
+      <VisuallyHidden>
+        <DialogTitle></DialogTitle>
+      </VisuallyHidden>
       <DialogContent className="sm:max-w-[425px]">
         <div className="space-y-4">
           <div className="flex items-center gap-4">

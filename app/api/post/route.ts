@@ -1,8 +1,9 @@
 import Post, { IPost } from "@/models/post-schema";
 import connectDB from "@/lib/db";
 import { getUserbyId } from "@/actions/getUserbyId";
-import { IUser } from "@/models/user-schema";
+import User, { IUser } from "@/models/user-schema";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 export async function POST(req: Request) {
   try {
@@ -37,6 +38,12 @@ export async function POST(req: Request) {
     });
 
     const savedPost = await newPost.save();
+
+    await User.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(String(user._id)) },
+      { $push: { posts: savedPost._id } },
+      { new: true }
+    );
 
     return new NextResponse(JSON.stringify(savedPost), { status: 201 });
   } catch (error) {

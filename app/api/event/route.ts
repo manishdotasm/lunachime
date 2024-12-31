@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     const savedEvent = await newEvent.save();
 
-    await User.updateOne({ _id: user?._id }, { $push: { events: String(savedEvent._id) } });
+    await User.updateOne({ _id: user?._id }, { $push: { eventsCreated: String(savedEvent._id) } });
 
     return NextResponse.json({ success: true, event: savedEvent }, { status: 201 });
   } catch (error) {
