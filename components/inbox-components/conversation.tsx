@@ -26,7 +26,6 @@ export function Conversation({ conversation, currentUser, participants, messages
 
   const handleSendMessage = () => {
     // Implement send message logic here
-    console.log("Sending message:", newMessage);
     setNewMessage("");
   };
 

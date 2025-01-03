@@ -40,7 +40,7 @@ export function Event({ event }: { event: IEvent }) {
 
   return (
     <>
-      <Card className="bg-[#F0F6FF] border-none cursor-pointer mb-4" onClick={() => setIsDialogOpen(true)}>
+      <Card className=" border-2 border-gray-200 cursor-pointer mb-4" onClick={() => setIsDialogOpen(true)}>
         <CardHeader className="flex flex-row items-center gap-4 space-y-0">
           <Avatar className="h-10 w-10">
             <AvatarImage src={event.creator.avatar} alt={event.creator.name} />

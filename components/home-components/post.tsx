@@ -26,7 +26,7 @@ export function Post({ post }: { post: IPost }) {
 
   return (
     <>
-      <Card className="bg-[#F0F6FF] border-none mb-4">
+      <Card className="border-2 border-gray-200 mb-4">
         <CardHeader className="flex flex-row items-center gap-4 space-y-0">
           <Avatar className="h-10 w-10">
             <AvatarImage src={post.author.avatar} alt={post.author.name} />

@@ -195,8 +195,7 @@ export default function BookmarksPage() {
       <CustomBreadCrumb />
       <PlaceholderContent>
         <div className="min-h-screen">
-          <main className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-8 text-gray-800 dark:text-gray-100">Your Bookmarks</h1>
+          <main className="container mx-auto px-4 ">
             <div className="mb-6">
               <div className="relative">
                 <Input

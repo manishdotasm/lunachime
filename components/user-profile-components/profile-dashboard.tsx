@@ -1,17 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, MessageSquare, Calendar } from "lucide-react";
 import Link from "next/link";
-import { PostGrid } from "./post-grid";
-import getUniversitybyId from "@/actions/getUniversityNamebyID";
-import { EventList } from "./event-grid";
 import { IUser } from "@/models/user-schema";
+import { PostGrid } from "./post-grid";
+import { EventList } from "./event-grid";
 
-export default async function ProfileDashboard({ user }: { user: IUser | null }) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-  const universityName = getUniversitybyId(user?.university!);
+export default function ProfileDashboard({ user }: { user: IUser | null }) {
   return (
     <div className="p-6 min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -22,7 +18,6 @@ export default async function ProfileDashboard({ user }: { user: IUser | null })
               <div className="w-1 h-6 bg-blue-500 rounded-full" />
               <CardTitle>Profile</CardTitle>
             </div>
-            <Button variant="outline">Edit Profile</Button>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col md:flex-row gap-8">
@@ -41,7 +36,7 @@ export default async function ProfileDashboard({ user }: { user: IUser | null })
                   <div className="space-y-3">
                     <div>
                       <p className="text-sm text-gray-500">@{user?.username}</p>
-                      <p>{universityName}</p>
+                      <p>{user?.university}</p>
                       <p className="text-gray-600">
                         {user?.program} • Year {user?.academicYear}
                       </p>

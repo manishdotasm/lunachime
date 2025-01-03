@@ -1,14 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import { getPostbyPostIds } from "@/actions/getPostbyPostIds";
+
+import { IPost } from "@/models/post-schema";
 import { Card, CardContent } from "../ui/card";
 import { PostDialog } from "./post-dialog";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-interface PostGridProps {
-  postIds: string[] | undefined;
-}
+export function PostGrid({ postIds }: { postIds: string[] | undefined }) {
+  const [posts, setPosts] = useState<IPost[]>([]);
 
-export async function PostGrid({ postIds }: PostGridProps) {
-  const posts = await getPostbyPostIds(postIds!);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await axios.get("/api/posts", { params: { postIds } });
+      setPosts(res.data);
+    };
+    fetchPosts();
+  }, [postIds]);
 
   if (!posts) return <div>loading...</div>;
 

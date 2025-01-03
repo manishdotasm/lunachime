@@ -1,10 +1,12 @@
+import getCurrentUser from "@/actions/getCurrentUser";
 import ProfileDashboard from "@/components/profile-components/profile-dashboard";
 import React from "react";
 
-const Profile = () => {
+const Profile = async () => {
+  const user = await getCurrentUser();
   return (
     <div>
-      <ProfileDashboard />
+      <ProfileDashboard user={user} />
     </div>
   );
 };

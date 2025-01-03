@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       gender,
       program,
       academicYear,
-      university: university._id,
+      university: university.name,
       status: "offline",
       isEmailVerified: true,
       isPhoneVerified: false,
