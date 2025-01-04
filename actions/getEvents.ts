@@ -7,10 +7,12 @@ export async function getEvents(page: number, sortBy: "recent" | "popular"): Pro
     let sortQuery = {};
 
     if (sortBy === "recent") {
-      sortQuery = { createdAt: -1 }; // Sort by most recent
+      sortQuery = { createdAt: -1 };
     } else if (sortBy === "popular") {
-      sortQuery = { attendees: -1 }; // Sort by number of attendees (descending)
+      sortQuery = { attendees: -1 };
     }
+
+    console.log("REACHED HERE");
 
     const events: IEvent[] = await Event.find({ isDeleted: false }).sort(sortQuery).skip(skip).limit(limit);
 
