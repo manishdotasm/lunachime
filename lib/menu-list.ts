@@ -48,16 +48,6 @@ export function getMenuList(): Group[] {
           href: "/posts",
           label: "Posts",
           icon: SquarePen,
-          submenus: [
-            {
-              href: "/posts/new",
-              label: "New",
-            },
-            {
-              href: "/posts/popular",
-              label: "Popular",
-            },
-          ],
         },
         {
           href: "/events",

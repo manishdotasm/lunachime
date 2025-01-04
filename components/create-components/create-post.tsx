@@ -52,7 +52,7 @@ const PostForm = ({ user }: { user: IUser | null }) => {
   };
 
   return (
-    <Card className="max-w-md mx-auto">
+    <Card className="max-w-md mx-auto ">
       <CardHeader>
         <CardTitle>Create a Post</CardTitle>
       </CardHeader>

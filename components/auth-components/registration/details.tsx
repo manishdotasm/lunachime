@@ -188,8 +188,6 @@ export function RegistrationForm() {
       program,
     };
 
-    console.log(submissionData);
-
     axios
       .post("/api/auth/register/final-details", submissionData)
       .then(async () => {

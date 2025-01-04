@@ -42,7 +42,6 @@ export function EmailForm() {
   const router = useRouter();
 
   const onSubmit = (data: emailFormValues) => {
-    console.log(data.email);
     setIsLoading(true);
 
     axios

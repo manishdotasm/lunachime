@@ -6,7 +6,6 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("query");
-    console.log("ID: ", query);
 
     if (!query) return new NextResponse(JSON.stringify({ message: "Missing id parameter" }), { status: 400 });
 

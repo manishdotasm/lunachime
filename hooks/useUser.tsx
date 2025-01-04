@@ -6,7 +6,7 @@ export function useUser() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await fetch("/api/user"); // Replace with your API endpoint
+      const res = await fetch("/api/user");
       const data = await res.json();
       setUser(data);
       setLoading(false);
