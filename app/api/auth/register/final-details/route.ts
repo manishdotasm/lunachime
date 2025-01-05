@@ -102,8 +102,6 @@ export async function POST(request: Request) {
       lastActivity: new Date(),
     });
 
-    console.log(newUser);
-
     // Save the new user to the database
     await newUser.save();
 

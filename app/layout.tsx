@@ -1,6 +1,7 @@
 import { Providers } from "@/utilities/providers";
 import "./globals.css";
 import { Toaster } from "sonner";
+import "./extracss.css";
 
 export default function RootLayout({
   children,

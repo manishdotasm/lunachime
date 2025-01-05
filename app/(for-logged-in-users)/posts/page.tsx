@@ -5,11 +5,12 @@ import PlaceholderContent from "@/components/admin-panel/placeholder-content";
 import PostList from "@/components/posts-component/PostList";
 import { SortPosts } from "@/components/posts-component/SortPosts";
 
-export default async function PostsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function PostsPage(
+  props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const sortBy = (typeof searchParams.sortBy === "string" ? searchParams.sortBy : "recent") as "recent" | "popular";
   const initialPosts = await getPosts(1, sortBy);
 

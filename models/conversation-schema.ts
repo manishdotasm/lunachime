@@ -1,42 +1,44 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+export interface IParticipant {
+  userId: string;
+  name: string;
+  avatar: string;
+}
+
 export interface IConversation extends Document {
-  participants: string[];
+  participants: IParticipant[]; // Updated to store userId, name, and avatar
   messages: string[];
   groupName?: string;
   groupImage?: string;
-  groupDescription?: string;
   isGroup: boolean;
   lastMessage: string;
   lastMessageDate: Date;
   createdAt: Date;
   updatedAt: Date;
-  isArchived: boolean;
-  isMuted: boolean;
   pinnedMessages: string[];
-  adminIds: string[];
-  isDeleted: boolean;
-  conversationType: "direct" | "group";
+  conversationType: string;
 }
 
 const ConversationSchema = new Schema<IConversation>(
   {
-    participants: { type: [String], required: true },
+    participants: [
+      {
+        userId: { type: String, required: true }, // User ID of the participant
+        name: { type: String, required: true }, // Name of the participant
+        avatar: { type: String }, // URL of the participant's avatar (optional)
+      },
+    ],
     messages: { type: [String], required: true },
     groupName: { type: String },
     groupImage: { type: String },
-    groupDescription: { type: String },
     isGroup: { type: Boolean, default: false },
     lastMessage: { type: String },
     lastMessageDate: { type: Date },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
-    isArchived: { type: Boolean, default: false },
-    isMuted: { type: Boolean, default: false },
     pinnedMessages: { type: [String], default: [] },
-    adminIds: { type: [String], default: [] },
-    isDeleted: { type: Boolean, default: false },
-    conversationType: { type: String, enum: ["direct", "group"], required: true },
+    conversationType: { type: String, enum: ["single", "group"], default: "single" },
   },
   { timestamps: { createdAt: true, updatedAt: true } }
 );

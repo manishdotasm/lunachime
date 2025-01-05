@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { IEvent } from "@/models/event-schema";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { Key } from "react";
 
 interface EventCardProps {
   event: IEvent;
@@ -31,7 +33,7 @@ export default function EventCard({ event }: EventCardProps) {
         {event.media && event.media.length > 0 && (
           <Carousel className="w-full max-w-xs mx-auto">
             <CarouselContent>
-              {event.media.map((media, index) => (
+              {event.media.map((media: { url: string | StaticImport }, index: Key | null | undefined) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
                     <Image

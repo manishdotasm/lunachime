@@ -1,3 +1,4 @@
+import connectDB from "@/lib/db";
 import Event, { IEvent } from "@/models/event-schema";
 
 export async function getEvents(page: number, sortBy: "recent" | "popular"): Promise<IEvent[]> {
@@ -12,7 +13,7 @@ export async function getEvents(page: number, sortBy: "recent" | "popular"): Pro
       sortQuery = { attendees: -1 };
     }
 
-    console.log("REACHED HERE");
+    connectDB();
 
     const events: IEvent[] = await Event.find({ isDeleted: false }).sort(sortQuery).skip(skip).limit(limit);
 

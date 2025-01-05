@@ -5,13 +5,14 @@ import PlaceholderContent from "@/components/admin-panel/placeholder-content";
 import EventList from "@/components/events-components/EventList";
 import { SortEvents } from "@/components/events-components/SortEvents";
 
-interface EventsPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
-export default async function EventsPage({ searchParams }: EventsPageProps) {
+export default async function EventsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<JSX.Element> {
+  const searchparams = await searchParams;
   // Extract sortBy from searchParams
-  const sortBy = (typeof searchParams.sortBy === "string" ? searchParams.sortBy : "recent") as "recent" | "popular";
+  const sortBy = (typeof searchparams.sortBy === "string" ? searchparams.sortBy : "recent") as "recent" | "popular";
 
   // Fetch initial events
   const initialEvents = await getEvents(1, sortBy);
