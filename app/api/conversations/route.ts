@@ -3,7 +3,6 @@ import connectDB from "@/lib/db";
 import Conversation, { IConversation, IParticipant } from "@/models/conversation-schema";
 import User, { IUser } from "@/models/user-schema";
 import mongoose from "mongoose";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 export async function POST(req: Request) {
   try {
@@ -16,14 +15,20 @@ export async function POST(req: Request) {
       return new mongoose.Types.ObjectId(String(participant));
     });
 
-    const query = isGroup
-      ? { participantObjectIds, isGroup, groupName, groupPhoto }
-      : { participants: { $all: participantObjectIds, $size: 2 } };
+    if (!isGroup && participants.length === 2) {
+      const existingConversation = await Conversation.findOne({
+        participants: {
+          $all: [
+            { $elemMatch: { userId: participantObjectIds[0] } },
+            { $elemMatch: { userId: participantObjectIds[1] } },
+          ],
+        },
+        isGroup: false,
+      });
 
-    const conversation: IConversation | null = await Conversation.findOne(query);
-
-    if (conversation) {
-      return new Response(JSON.stringify(conversation), { status: 200 });
+      if (existingConversation) {
+        return new Response(JSON.stringify(existingConversation), { status: 200 });
+      }
     }
 
     const participantsDenormalized: IParticipant[] = [];
@@ -55,7 +60,7 @@ export async function POST(req: Request) {
     // save coversation in all participants
     for (const participant of participants) {
       await User.findByIdAndUpdate(
-        participant.userId,
+        new mongoose.Types.ObjectId(String(participant)),
         {
           $push: { conversations: String(newConversation._id) },
         },

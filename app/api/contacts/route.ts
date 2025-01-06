@@ -6,7 +6,6 @@ export async function GET(req: Request) {
     await connectDB();
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("search");
-
     if (!query) return new Response("Missing query parameter", { status: 400 });
 
     const searchedContacts = await User.find({

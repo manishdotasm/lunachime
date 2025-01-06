@@ -9,9 +9,10 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import placeholder from "@/public/placeholder.png";
 import { useRouter } from "next/navigation";
+import Loader from "./Loader";
 
 const Contacts = ({ currentUser }: { currentUser: IUser | null }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [contacts, setContacts] = useState<IUser[]>([]);
   const [search, setSearch] = useState("");
 
@@ -66,6 +67,7 @@ const Contacts = ({ currentUser }: { currentUser: IUser | null }) => {
     // Convert selected contacts to an array of participant IDs
     const participantsIds = Array.from(selectedContacts).map((user) => String(user._id));
     console.log("PARTICIPANTS", participantsIds);
+    const setofparticipantIds = [...new Set(participantsIds)];
 
     const res = await fetch("/api/conversations", {
       method: "POST",
@@ -73,9 +75,9 @@ const Contacts = ({ currentUser }: { currentUser: IUser | null }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        participants: participantsIds,
-        isGroup: selectedContacts.size > 1,
-        groupName: selectedContacts.size > 1 ? groupName : "",
+        participants: setofparticipantIds,
+        isGroup: selectedContacts.size > 2,
+        groupName: selectedContacts.size > 2 ? groupName : "",
         groupPhoto: "",
       }),
     });
@@ -88,7 +90,9 @@ const Contacts = ({ currentUser }: { currentUser: IUser | null }) => {
     }
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="create-chat-container">
       {/* Search Input */}
       <Input placeholder="Search user!" value={search} onChange={(e) => setSearch(e.target.value)} />
@@ -153,7 +157,7 @@ const Contacts = ({ currentUser }: { currentUser: IUser | null }) => {
           )}
 
           <Button type="submit" disabled={selectedContacts.size === 0}>
-            START A NEW CHAT
+            FIND OR START A NEW CHAT
           </Button>
         </form>
       </div>
