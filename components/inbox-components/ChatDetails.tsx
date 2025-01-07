@@ -1,17 +1,17 @@
 "use client";
 
 import { IConversation, IParticipant } from "@/models/conversation-schema";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "./Loader";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import placeholder from "@/public/placeholder.png";
-import { IconPhoto } from "@tabler/icons-react";
+import { IconBrandTelegram, IconPhoto } from "@tabler/icons-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { IMessage } from "@/models/message-schema";
 import MessageBox from "./MessageBox";
 import { IUser } from "@/models/user-schema";
+import { pusherClient } from "@/lib/pusher";
 
 const ChatDetails = ({
   currentConversationId,
@@ -93,10 +93,28 @@ const ChatDetails = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentConversationId]);
 
+  useEffect(() => {
+    pusherClient.subscribe(currentConversationId);
+    const handleMessage = async (newMessage: IMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    };
+    pusherClient.bind("new-message", handleMessage);
+    return () => {
+      pusherClient.unsubscribe(currentConversationId);
+      pusherClient.unbind("new-message", handleMessage);
+    };
+  }, [currentConversationId]);
+
+  const bottomRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return loading ? (
     <Loader />
   ) : (
-    <div className="chat-details">
+    <div className="chat-details ">
       <div className="chat-header">
         {conversation?.isGroup ? (
           <div className="flex items-center gap-x-4">
@@ -133,10 +151,11 @@ const ChatDetails = ({
         {messages.map((message, index) => (
           <MessageBox key={index} message={message} currentUser={currentUser} />
         ))}
+        <div ref={bottomRef} />
       </div>
 
       <div className="send-message">
-        <div className="prepare-message">
+        <div className="prepare-message w-full">
           <IconPhoto size={24} />
           <Input
             type="text"
@@ -144,10 +163,12 @@ const ChatDetails = ({
             value={text}
             onChange={(e) => setText(e.target.value)}
             required
-            className="input-field"
+            className="input-field w-full mr-4"
           />
         </div>
-        <Button onClick={sendText}></Button>
+        <Button onClick={sendText}>
+          <IconBrandTelegram />
+        </Button>
       </div>
     </div>
   );

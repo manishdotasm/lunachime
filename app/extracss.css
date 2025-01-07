@@ -79,7 +79,8 @@
 
   /* Chat List */
   .chat-list {
-    @apply h-screen flex flex-col gap-5 pb-20;
+    @apply flex flex-col gap-x-5 pb-20;
+    height: calc(100vh - 80px);
   }
 
   .input-search {
@@ -138,7 +139,8 @@
 
   /* ChatDetails */
   .chat-details {
-    @apply h-screen flex flex-col bg-white rounded-2xl;
+    @apply flex flex-col bg-white rounded-2xl;
+    height: calc(100vh - 80px);
   }
 
   /* Chat Header */

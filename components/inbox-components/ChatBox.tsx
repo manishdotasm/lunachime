@@ -2,9 +2,8 @@ import { IConversation, IParticipant } from "@/models/conversation-schema";
 import { IUser } from "@/models/user-schema";
 import Image from "next/image";
 import placeholder from "@/public/placeholder.png";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IMessage } from "@/models/message-schema";
 
 const ChatBox = ({
@@ -31,11 +30,13 @@ const ChatBox = ({
     getMessages();
   }, [conversation._id]);
 
-  const otherMembers: IParticipant[] = conversation?.participants.filter(
-    (participant) => participant.userId !== String(currentUser?._id)
-  );
+  const allParticipants: IParticipant[] = conversation?.participants;
+  const otherMembers = allParticipants?.filter((participant) => participant.userId !== currentUser?._id);
+  console.log("OTHER MEMBERS", otherMembers);
 
-  const otherMemberName = otherMembers[0].name;
+  let otherMemberName: string = "";
+  if (!otherMembers) otherMemberName = "";
+  else otherMemberName = otherMembers[0].name;
 
   const lastMessageObject: IMessage = messages[messages.length - 1];
   const lastMessage: string = lastMessageObject?.content;
@@ -43,9 +44,21 @@ const ChatBox = ({
 
   const router = useRouter();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatDate = (date: any): string => {
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return "--:--"; // Fallback for invalid dates
+
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    }).format(parsedDate);
+  };
+
   return (
     <div
-      className={`chat-box flex items-center  ${String(conversation._id) === currentConversationId ? "bg-blue-2" : ""}`}
+      className={`chat-box   ${String(conversation._id) === currentConversationId ? "bg-blue-2" : ""}`}
       onClick={() => router.push(`/inbox/${String(conversation?._id)}`)}
     >
       <div className="chat-info flex items-center">
@@ -59,7 +72,7 @@ const ChatBox = ({
           />
         ) : (
           <Image
-            src={otherMembers[0].avatar || placeholder}
+            src={!otherMembers ? placeholder : otherMembers[0].avatar || placeholder}
             alt="Other Person"
             className="profilePhoto"
             height={80}
@@ -82,11 +95,8 @@ const ChatBox = ({
           )}
         </div>
       </div>
-
       <p className="text-base-light text-grey-3">
-        {!lastMessage
-          ? format(new Date(conversation?.createdAt), "p")
-          : format(new Date(conversation?.lastMessageDate), "p")}
+        {!lastMessage ? formatDate(conversation?.createdAt) : formatDate(conversation?.lastMessageDate)}
       </p>
     </div>
   );

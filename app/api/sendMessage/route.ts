@@ -1,6 +1,7 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import connectDB from "@/lib/db";
-import Conversation from "@/models/conversation-schema";
+import { pusherServer } from "@/lib/pusher";
+import Conversation, { IParticipant } from "@/models/conversation-schema";
 import Message from "@/models/message-schema";
 import mongoose from "mongoose";
 
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     await newMessage.save();
 
     const conversationObjectId = new mongoose.Types.ObjectId(String(conversationId));
-    await Conversation.findByIdAndUpdate(
+    const updatedConversation = await Conversation.findByIdAndUpdate(
       conversationObjectId,
       {
         $push: { messages: String(newMessage._id) },
@@ -39,6 +40,20 @@ export async function POST(req: Request) {
       },
       { new: true }
     );
+
+    await pusherServer.trigger(conversationId, "new-message", newMessage);
+
+    const lastMessage = updatedConversation?.messages[updatedConversation.messages.length - 1];
+    updatedConversation?.participants.forEach(async (participant: IParticipant) => {
+      try {
+        await pusherServer.trigger(String(participant.userId), "update-conversation", {
+          conversationId: conversationId,
+          lastMessage: lastMessage,
+        });
+      } catch (error) {
+        console.error("FAILED TO SEND NOTIFICATION", error);
+      }
+    });
 
     return new Response(JSON.stringify(newMessage), { status: 200 });
   } catch (error) {

@@ -6,6 +6,7 @@ import { IConversation } from "@/models/conversation-schema";
 import Loader from "./Loader";
 import ChatBox from "./ChatBox";
 import { IUser } from "@/models/user-schema";
+import { pusherClient } from "@/lib/pusher";
 
 const ChatList = ({
   currentUser,
@@ -34,6 +35,25 @@ const ChatList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
+  useEffect(() => {
+    pusherClient.subscribe(String(currentUser?._id));
+    const handleConversationUpdate = (data: IConversation) => {
+      setConversations((prevConversations) => {
+        const index = prevConversations.findIndex((conversation) => conversation._id === data._id);
+        if (index === -1) {
+          return [data, ...prevConversations];
+        }
+        prevConversations[index] = data;
+        return [...prevConversations];
+      });
+    };
+    pusherClient.bind("update-conversation", handleConversationUpdate);
+
+    return () => {
+      pusherClient.unsubscribe(String(currentUser?._id));
+      pusherClient.unbind("update-conversation", handleConversationUpdate);
+    };
+  }, [currentConversationId, currentUser?._id]);
   return loading ? (
     <Loader />
   ) : (
