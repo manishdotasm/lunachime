@@ -13,6 +13,12 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event }: EventCardProps) {
+  const handleJoinEvent = () => {
+    // Add your logic for joining the event here
+    console.log("Joining event:", event.eventName);
+    alert(`You have joined the event: ${event.eventName}`);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -76,6 +82,9 @@ export default function EventCard({ event }: EventCardProps) {
         <Button variant="ghost" size="sm">
           <MapPin className="w-4 h-4 mr-2" />
           {event.location.name}
+        </Button>
+        <Button onClick={handleJoinEvent} size="sm" className=" text-white">
+          Join Event
         </Button>
       </CardFooter>
     </Card>
